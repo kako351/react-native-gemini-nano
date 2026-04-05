@@ -1,32 +1,52 @@
 {
-  "name": "react-native-gemini-nano",
+  "name": "@kako351/react-native-gemini-nano",
   "version": "0.1.0",
-  "description": "React Native TurboModule bridge for Android AICore / Gemini Nano.",
-  "main": "src/index.ts",
-  "types": "src/index.ts",
+  "description": "React Native TurboModule bridge for Android ML Kit Prompt API backed by Gemini Nano.",
+  "main": "lib/commonjs/index.js",
+  "types": "lib/typescript/index.d.ts",
   "react-native": "src/index.ts",
   "source": "src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/typescript/index.d.ts",
+      "react-native": "./src/index.ts",
+      "default": "./lib/commonjs/index.js"
+    }
+  },
   "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "prepare": "npm run build",
     "example:install": "cd example && npm install",
     "example:start": "cd example && npm start",
     "example:android": "cd example && npm run android",
     "example:lint": "cd example && npm run lint"
   },
   "files": [
+    "lib",
     "src",
-    "android",
-    "example",
+    "android/build.gradle",
+    "android/consumer-rules.pro",
+    "android/gradle.properties",
+    "android/src",
+    "README.md",
+    "LICENSE",
     "react-native.config.js",
-    "tsconfig.json"
+    "tsconfig.json",
+    "tsconfig.build.json"
   ],
   "keywords": [
     "react-native",
     "android",
     "turbo-module",
     "gemini-nano",
-    "aicore"
+    "aicore",
+    "ml-kit",
+    "on-device-ai"
   ],
   "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
   "peerDependencies": {
     "react": ">=19.2.3",
     "react-native": ">=0.84.0"

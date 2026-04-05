@@ -1,6 +1,6 @@
 # Gemini Nano Example
 
-`react-native-gemini-nano` を Android の React Native アプリから利用するためのサンプルです。
+`@kako351/react-native-gemini-nano` を Android の React Native アプリから利用するためのサンプルです。
 
 ## セットアップ
 
@@ -12,6 +12,7 @@
 ## 補足
 
 - `example/android/gradlew` と `gradle-wrapper.jar` は追加済みです。
+- ライブラリは npm から `@kako351/react-native-gemini-nano` をインストールします。
 - ルートからは `npm run example:install` / `npm run example:start` / `npm run example:android` でも実行できます。
 
 ## 前提

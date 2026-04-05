@@ -8,9 +8,9 @@
     "lint": "tsc --noEmit"
   },
   "dependencies": {
+    "@kako351/react-native-gemini-nano": "^0.1.0",
     "react": "19.2.3",
-    "react-native": "0.84.0",
-    "react-native-gemini-nano": "file:.."
+    "react-native": "0.84.0"
   },
   "devDependencies": {
     "@babel/core": "^7.26.0",

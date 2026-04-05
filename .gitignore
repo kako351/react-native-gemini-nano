@@ -9,3 +9,5 @@ example/android/app/.cxx
 *.iml
 local.properties
 example/android/local.properties
+.npm-cache
+*.tgz

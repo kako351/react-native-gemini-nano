@@ -9,10 +9,9 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {useGeminiNano} from 'react-native-gemini-nano';
+import {useGeminiNano} from '@kako351/react-native-gemini-nano';
 
-const DEFAULT_PROMPT =
-  '以下の会議メモを3つの箇条書きで要約してください: 昨日の定例ではAndroidのオンデバイスAI機能の検証状況、端末互換性、次スプリントでのPoC範囲を確認した。';
+const DEFAULT_PROMPT = 'こんにちは';
 
 function App(): React.JSX.Element {
   const [prompt, setPrompt] = useState(DEFAULT_PROMPT);
