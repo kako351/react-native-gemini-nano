@@ -2,8 +2,6 @@ package com.gemininano
 
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
-import com.google.android.gms.tasks.Task
-import com.google.android.gms.tasks.TaskCompletionSource
 import com.gemininano.bridge.GeminiNanoEventNames
 import com.gemininano.bridge.ReactNativeEventEmitter
 import com.gemininano.bridge.toWritableMap
@@ -36,31 +34,48 @@ class GeminiNanoModule(
   override fun getName(): String = NAME
 
   override fun isAvailable(promise: Promise) {
-    toPromise(promise) {
-      service.getAvailability().isAvailable
+    moduleScope.launch {
+      try {
+        promise.resolve(service.getAvailability().isAvailable)
+      } catch (error: Throwable) {
+        rejectPromise(promise, error)
+      }
     }
   }
 
   override fun getAvailability(promise: Promise) {
-    toPromise(promise) {
-      service.getAvailability().toWritableMap()
+    moduleScope.launch {
+      try {
+        promise.resolve(service.getAvailability().toWritableMap())
+      } catch (error: Throwable) {
+        rejectPromise(promise, error)
+      }
     }
   }
 
   override fun downloadModel(promise: Promise) {
-    toPromise(promise) {
-      service.downloadModel { status ->
-        eventEmitter.emit(
-          GeminiNanoEventNames.DOWNLOAD,
-          status.toWritableMap(errorMapper),
-        )
+    moduleScope.launch {
+      try {
+        service.downloadModel { status ->
+          eventEmitter.emit(
+            GeminiNanoEventNames.DOWNLOAD,
+            status.toWritableMap(errorMapper),
+          )
+        }
+        promise.resolve(null)
+      } catch (error: Throwable) {
+        rejectPromise(promise, error)
       }
     }
   }
 
   override fun generateText(prompt: String, promise: Promise) {
-    toPromise(promise) {
-      service.generateText(prompt)
+    moduleScope.launch {
+      try {
+        promise.resolve(service.generateText(prompt))
+      } catch (error: Throwable) {
+        rejectPromise(promise, error)
+      }
     }
   }
 
@@ -96,33 +111,12 @@ class GeminiNanoModule(
     super.invalidate()
   }
 
-  private fun <T> toPromise(
+  private fun rejectPromise(
     promise: Promise,
-    block: suspend () -> T,
+    error: Throwable,
   ) {
-    runAsTask(block)
-      .addOnSuccessListener { result ->
-        promise.resolve(result)
-      }
-      .addOnFailureListener { error ->
-        val normalized = errorMapper.map(error)
-        promise.reject(normalized.code, normalized.message, error)
-      }
-  }
-
-  private fun <T> runAsTask(block: suspend () -> T): Task<T> {
-    val taskSource = TaskCompletionSource<T>()
-
-    moduleScope.launch {
-      try {
-        taskSource.setResult(block())
-      } catch (error: Throwable) {
-        val exception = if (error is Exception) error else Exception(error)
-        taskSource.setException(exception)
-      }
-    }
-
-    return taskSource.task
+    val normalized = errorMapper.map(error)
+    promise.reject(normalized.code, normalized.message, error)
   }
 
   companion object {
