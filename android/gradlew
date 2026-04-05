@@ -1,0 +1,33 @@
+#!/bin/sh
+
+#
+# Copyright 2015 the original author or authors.
+#
+# Licensed under the Apache License, Version 2.0.
+#
+
+APP_HOME=$(cd "${0%/*}" && pwd -P)
+APP_BASE_NAME=${0##*/}
+CLASSPATH=$APP_HOME/gradle/wrapper/gradle-wrapper.jar
+EXAMPLE_LOCAL_PROPERTIES=$APP_HOME/../example/android/local.properties
+
+if [ -z "$ANDROID_HOME" ] && [ -f "$EXAMPLE_LOCAL_PROPERTIES" ]; then
+  SDK_DIR=$(sed -n 's/^sdk\.dir=//p' "$EXAMPLE_LOCAL_PROPERTIES" | head -n 1)
+  if [ -n "$SDK_DIR" ]; then
+    ANDROID_HOME=$SDK_DIR
+    export ANDROID_HOME
+    export ANDROID_SDK_ROOT=$SDK_DIR
+  fi
+fi
+
+if [ -n "$JAVA_HOME" ]; then
+  JAVACMD="$JAVA_HOME/bin/java"
+else
+  JAVACMD="java"
+fi
+
+exec "$JAVACMD" \
+  "-Dorg.gradle.appname=$APP_BASE_NAME" \
+  -classpath "$CLASSPATH" \
+  org.gradle.wrapper.GradleWrapperMain \
+  "$@"
