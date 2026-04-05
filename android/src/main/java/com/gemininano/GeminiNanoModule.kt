@@ -2,8 +2,6 @@ package com.gemininano
 
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
-import com.facebook.react.bridge.ReactMethod
-import com.facebook.react.module.annotations.ReactModule
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.TaskCompletionSource
 import com.gemininano.bridge.GeminiNanoEventNames
@@ -22,7 +20,6 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 
-@ReactModule(name = GeminiNanoModule.NAME)
 class GeminiNanoModule(
   reactContext: ReactApplicationContext,
   private val service: GeminiNanoService = DefaultGeminiNanoService(
@@ -38,21 +35,18 @@ class GeminiNanoModule(
 
   override fun getName(): String = NAME
 
-  @ReactMethod
   override fun isAvailable(promise: Promise) {
     toPromise(promise) {
       service.getAvailability().isAvailable
     }
   }
 
-  @ReactMethod
   override fun getAvailability(promise: Promise) {
     toPromise(promise) {
       service.getAvailability().toWritableMap()
     }
   }
 
-  @ReactMethod
   override fun downloadModel(promise: Promise) {
     toPromise(promise) {
       service.downloadModel { status ->
@@ -64,14 +58,12 @@ class GeminiNanoModule(
     }
   }
 
-  @ReactMethod
   override fun generateText(prompt: String, promise: Promise) {
     toPromise(promise) {
       service.generateText(prompt)
     }
   }
 
-  @ReactMethod
   override fun generateTextStream(prompt: String) {
     streamJob?.cancel()
     streamJob = moduleScope.launch {
